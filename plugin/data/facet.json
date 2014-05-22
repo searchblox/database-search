@@ -20,8 +20,7 @@
                 {"name":"Past Year","calendar":"years","value":"1"}
             ]}
     ],
-    "collection":[
-    ],
+    "collection":[  ],
     "sortBtns":[
 		{"field":"alpha","display":"Alphabetic"},
 		{"field":"date","display":"Date"},
