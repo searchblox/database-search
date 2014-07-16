@@ -1,8 +1,7 @@
 <div class="container-fluid app-font">
-	<span ng-show="parsedSearchResults.found > 0">
 	<div class="row">
-        <div id="sort_btn_aligner" style="margin-top:40px;margin-bottom:50px;">
-            <div class="btn-group btn-group-{{type}} col-sm-7 col-md-7 col-md-offset-3" data-toggle="buttons">
+        <div id="sort_btn_aligner" ng-show="parsedSearchResults.found > 0" style="margin-top:40px;margin-bottom:50px;">
+            <div class="btn-group btn-group-{{type}} col-sm-6 col-md-6 col-md-offset-2" data-toggle="buttons">
                 <label class="btn btn-warning disabled btn-sm">Sort By :</label>
                 <label  ng-repeat="sortBtn in sortBtns" class="btn btn-primary btn-sm" data-ng-click="doSort(sortBtn['sortVal'])">
                     {{sortBtn['display']}}
@@ -23,35 +22,10 @@
             </div>
         </div>
     </div>
-	</span>
 
     <div class="row" style="margin-top:20px;">
-        <div class="col-sm-3 col-md-3 sidebar left-nav colorBg" ng-show="hasFacets()">
+        <div class="col-sm-2 col-md-2 sidebar left-nav colorBg" ng-show="hasFacets()">
 
-            <!-- <div class="collapse navbar-collapse">
-            	<h4>Sort By</h4>
-            	<div id="sort_btn_aligner" style="text-align:center;">
-     				<div class="btn-group" data-toggle="buttons">
-            			<div class="btn btn-warning disabled">Sort By : </div>
-            			<div ng-repeat="sortBtn in sortBtns" ><div class="btn btn-primary" data-ng-click="doSort(sortBtn['sortVal'])">
-            				{{sortBtn['display']}}
-            			</div></div>
-            			<div ng-switch on="sortDir">
-    						<div ng-switch-when="asc">
- 								<div class="btn btn-info" id="direction" dir="asc" data-ng-click="doDirector('desc')">
-									<span class="glyphicon glyphicon-arrow-up"></span>
- 								</div>
-    						</div>
-    						<div ng-switch-default>
- 								<div class="btn btn-info" id="direction" dir="desc" data-ng-click="doDirector('asc')">
-									<span class="glyphicon glyphicon-arrow-down"></span>
- 								</div>
-    						</div>
-						</div>
-            		</div>
-            	</div>
-        	</div> -->
-        	
         	<span>
         	<!--	<div class="" id="facetview_leftcol_percolator" style="float: left; ">
                   <a class="btn btn-warning" href="#">Create Alert</a>
@@ -94,7 +68,14 @@
 
         </div>
 
-        <div class="col-sm-9 col-md-9 col-md-offset-0 main">
+
+        <div class="col-sm-8 col-md-8 col-md-offset-0 main">
+           <div class="row-fluid main-section" ng-show="hasInitAds()">
+                <div class="col-fluid" ng-repeat="advertisement in parsedSearchResults.ads.slice(0,2) track by advertisement['@no']" ng-class="'ads-style'">
+                    <ads-item  adv="advertisement">
+                    </ads-item>
+                </div>
+            </div>
             <div class="row-fluid main-section">
                     <div class="col-fluid" ng-repeat="result  in parsedSearchResults.records track by result['@no']" ng-class-odd="'odd'" ng-class-even="'even'">
                          <content-item  content="result">
@@ -127,6 +108,13 @@
             </div>
         </div>
 
+        <div class="col-sm-2 col-md-2 sidebar right-nav" ng-show="hasMoreAds()">
 
+        	 <div class="col-fluid" ng-repeat="advertisement in parsedSearchResults.ads.slice(2,parsedSearchResults.ads.length) track by advertisement['@no']" ng-class="'ads-style'">
+                 <ads-item  adv="advertisement">
+                 </ads-item>
+             </div>
+
+        </div>
     </div>
 </div>

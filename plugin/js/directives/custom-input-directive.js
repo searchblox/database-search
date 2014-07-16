@@ -35,7 +35,7 @@ angular.module('searchblox.custominput',[])
         scope: { searchParam: '=ngModel', onsearch: '='},
         replace: false,
         transclude: true,
-        template: '<div class="ngCustomInput col-sm-7 col-md-7 col-md-offset-3">' +
+        template: '<div class="ngCustomInput col-sm-6 col-md-6 col-md-offset-2">' +
             ' <div class="input-group input-group-sm">' +
             '    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>' +
             '    <input class="form-control" type="text"' +

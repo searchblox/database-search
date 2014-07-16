@@ -33,7 +33,8 @@ angular.module('searchblox.controller', [])
             $scope.tagHtml = "";
             $scope.topHtml = "";
             $scope.startedSearch = false;
-
+            $scope.initAds = 1;
+            $scope.maxAdsLimit = 2;
             $scope.dataMap = new Object();
 
 
@@ -64,12 +65,13 @@ angular.module('searchblox.controller', [])
                             $scope.sortBtns = searchbloxService.getSortBtns(data.sortBtns);
                         }
 
-//                        if (typeof($scope.sortBtns) == "undefined" || $scope.sortBtns == null) {
-//                            $scope.sortBtns = searchbloxService.sortBtns;
-//                        }
-
                         if (typeof($scope.dataMap['collectionString']) == "undefined" || $scope.dataMap['collectionString'] == null || $scope.dataMap['collectionString'] === "") {
+                            $scope.dataMap['selectedCollection'] = data.collection;
                             $scope.dataMap['collectionString'] = searchbloxService.getCollectionValues(data.collection);
+                        }
+
+                        if (typeof($scope.dataMap['collectionForAds']) == "undefined" || $scope.dataMap['collectionForAds'] == null || $scope.dataMap['collectionForAds'] === "") {
+                            $scope.dataMap['collectionForAds'] = data.collectionForAds;
                         }
 
                         if (typeof($scope.dataMap['matchAny']) == "undefined" || $scope.dataMap['matchAny'] == null) {
@@ -124,19 +126,13 @@ angular.module('searchblox.controller', [])
                 var urlParams = searchbloxService.getUrlParams(searchUrl, $scope.query,
                     $scope.rangeFilter, $scope.filterFields, $scope.page, $scope.dataMap);
                 searchbloxFactory.getResponseData(urlParams).then(function (searchResults) {
-                    $scope.parsedSearchResults = searchbloxService.parseResults(searchResults.data, $scope.facetMap);
+                    $scope.parsedSearchResults = searchbloxService.parseResults(searchResults.data, $scope.facetMap, $scope.dataMap);
                     $scope.parsedLinks = searchbloxService.parseLinks(searchResults.data, $scope.facetMap);
                     // $scope.getTopClicked();
                     //$scope.getTagCloud();
                     $scope.startedSearch = true;
                 });
             }
-
-
-            // toggleAutoSuggest
-//        $scope.toggleAutoSuggest = function () {
-//            $scope.showAutoSuggest = !$scope.showAutoSuggest;
-//        }
 
             // Sort function
             $scope.doSort = function (sortVal) {
@@ -149,37 +145,6 @@ angular.module('searchblox.controller', [])
                 $scope.dataMap['sortDir'] = direction;
                 $scope.doSearch();
             }
-
-            // Get last modified formatted
-//        $scope.getLastModified = function (lastmodified) {
-//            return moment(lastmodified).format("MMMM Do YYYY, h:mm:ss a");
-//        }
-
-            // get pagination
-//        $scope.getPagination = function(){
-//        	var metaTmpl = ' \
-//                <div> \
-//                  <ul class="pagination" style="float:left;padding:16px;"> \
-//                    <li class="prev"><a href data-ng-click="getPrevPage(\'{{decrement_text}}\')">{{decrement_text}}</a></li> \
-//                    <li class="active"><a>{{from}} &ndash; {{to}} of {{total}}</a></li> \
-//                    <li class="next"><a href data-ng-click="getNextPage(\'{{increment_text}}\')">{{increment_text}}</a></li> \
-//                  </ul> \
-//                </div> \
-//                ';
-//
-//        	var from = $scope.from + 1;
-//            var size = $scope.pageSize;
-//            !size ? size = 10 : "";
-//            var to = $scope.from + size;
-//            var found = $scope.parsedSearchResults.found;
-//            found < to ? to = found : "";
-//            var meta = metaTmpl.replace(/{{from}}/g, from);
-//            meta = meta.replace(/{{to}}/g, to);
-//            meta = meta.replace(/{{total}}/g, found);
-//            from < size ? (meta = meta.replace(/{{decrement_text}}/g, "..")) : (meta = meta.replace(/{{decrement_text}}/g, "&laquo; back")) ;
-//            $scope.parsedSearchResults.found <= to ? (meta = meta.replace(/{{increment_text}}/g, "..")) : (meta = meta.replace(/{{increment_text}}/g, "next &raquo;")) ;
-//            $scope.paginationHtml = $sce.trustAsHtml(meta);
-//        }
 
             // get tagcloud
             $scope.getTagCloud = function () {
@@ -365,4 +330,25 @@ angular.module('searchblox.controller', [])
                 }
                 return false;
             }
-        }]);
+
+            // check if there is atleast one filter in the facet
+            $scope.hasInitAds = function () {
+                if ($scope.parsedSearchResults !== undefined && $scope.parsedSearchResults !== null
+                    && $scope.parsedSearchResults.showAds) {
+                    if ($scope.parsedSearchResults.ads.length >= $scope.initAds){
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            $scope.hasMoreAds = function () {
+                if ($scope.parsedSearchResults !== undefined && $scope.parsedSearchResults !== null
+                    && $scope.parsedSearchResults.showAds) {
+                    if ($scope.parsedSearchResults.ads.length > $scope.maxAdsLimit){
+                        return true;
+                    }
+                }
+                return false;
+            }
+                }]);

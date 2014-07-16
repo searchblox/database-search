@@ -22,7 +22,6 @@ angular.module('searchblox.contentItem', []).
         }
 
         var linker = function(scope, element, attrs) {
-/////////////////////////////////////
             scope.computeResultToBind(scope.content);
             scope.$watch(function () {
                 if (scope.contentUrl && scope.contentType == "video") {
@@ -33,17 +32,12 @@ angular.module('searchblox.contentItem', []).
                 }
             });
 
-//            element.html(getTemplate(scope.contentType)).show();
-//
-//            $compile(element.contents())(scope);
-////////////////////////////////////
             var loader = getTemplate(scope.contentType);
 
             var promise = loader.success(function(html) {
                 element.html(html);
             }).then(function (response) {
                     element.replaceWith($compile(element.html())(scope));
-                   // element.replaceWith( $compile(element.contents())(scope));
                 });
         }
 
@@ -70,10 +64,6 @@ angular.module('searchblox.contentItem', []).
                 $scope.computeResultToBind = function (result) {
 
                     var recstr = JSON.stringify(result.url);
-//                    if(result.context !== null && result.context !== undefined){
-//                        $scope.contextText = encodeURIComponent(result.context['#text']);
-//                        $scope.contextHighLight = result.context.highlight;
-//                    }
                     var colid = result.col;
                     recstr = recstr.substring(1, recstr.length - 1);
                     var recstrf = recstr.substring(1, recstr.length);

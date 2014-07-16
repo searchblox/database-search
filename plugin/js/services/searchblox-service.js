@@ -145,8 +145,8 @@ angular.module('searchblox.service', [])
                 urlParam = urlParam + filterFields;
             }
 
-            if (typeof( dataMap['colValues']) !== "undefined" && dataMap['colValues'] !== null && !isBlank(dataMap['colValues'])) {
-                urlParam = urlParam + dataMap['colValues'];
+            if (typeof( dataMap['collectionString']) !== "undefined" && dataMap['collectionString'] !== null && !isBlank(dataMap['collectionString'])) {
+                urlParam = urlParam + dataMap['collectionString'];
             }
 
             if (typeof( dataMap['filter']) !== "undefined" && dataMap['filter'] !== null && !isBlank(dataMap['filter'])) {
@@ -227,14 +227,65 @@ angular.module('searchblox.service', [])
             return resultobj;
         }
 
+        // return array of advertisements
+        function getAds(adsObj){
+            if (!angular.isArray( adsObj)){
+                if(adsObj.ad !== null && typeof(adsObj.ad)!== "undefined"){
+                    return [adsObj.ad];
+                }
+                return [adsObj];
+            }
+            else
+                return  adsObj;
+        }
+
+        // return array of Collections
+        function getCollectionList(colObj){
+            if (!angular.isArray( colObj)){
+                if(colObj.ad !== null && typeof(colObj.collection)!== "undefined"){
+                    return [colObj.collection];
+                }
+                return [colObj];
+            }
+            else
+                return  colObj;
+        }
+
+        /**
+         * Check if id's listed in collectionForAds are in the CollectionList
+         * **/
+        function showAds(colObj, colAds, selCol){
+            var colList = new Array();
+            colList =  getCollectionList(colObj);
+            for (var col in colList) {
+                for(var ad in colAds ){
+                   // console.log("@id"+ colList[col]['@id']+" ==== "+colAds[ad]);
+                    if (colList[col]['@id'] == colAds[ad]){
+                        // loop through the selected collection
+                        if(selCol.length >0){
+                            for(var selValue in selCol ){
+                                if (selCol[selValue] == colAds[ad]){
+                                    return true;
+                                }
+                        }
+                    }else{
+                        return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         // Moved this functions from old code to here to perform search
         // read the result object and return useful vals depending on if ES or SOLR
         // returns an object that contains things like ["data"] and ["facets"]
-        this.parseResults = function (dataobj, facetFieldsMap) {
+        this.parseResults = function (dataobj, facetFieldsMap, dataMap) {
             var resultobj = new Object();
             resultobj["records"] = new Array();
             resultobj["start"] = "";
             resultobj["found"] = "0";
+            resultobj["showAds"] = false;
             if (typeof(dataobj.results) !== "undefined" && typeof(dataobj.results.result) !== "undefined") {
                 for (var item in dataobj.results.result) {
                     if (item == "@no") {
@@ -246,6 +297,14 @@ angular.module('searchblox.service', [])
                     resultobj["found"] = dataobj.results['@hits'];
                 }
             }
+            if ( dataobj.ads !== null && typeof(dataobj.ads)!== "undefined"){
+                resultobj["ads"] = new Array();
+                resultobj["ads"] = getAds(dataobj.ads);
+            }
+            if (typeof( dataMap['collectionForAds']) !== "undefined" && dataMap['collectionForAds'] !== null){
+                resultobj["showAds"] = showAds(dataobj.searchform.collections,dataMap['collectionForAds'], dataMap['selectedCollection']);
+            }
+
             if (typeof(dataobj.facets) !== "undefined") {
                 if (dataobj.facets) {
                     resultobj["facets"] = new Object();
@@ -291,7 +350,6 @@ angular.module('searchblox.service', [])
                                             data[0] = dataobj.facets[n]['int'][t1]['@from'];
                                             data[1] = dataobj.facets[n]['int'][t1]['@to'];
                                             data[2] = dataobj.facets[n]['int'][t1]['#text'];
-                                            //data[3]="hello-value";
                                             facetsobj[fname][t1] = data;
                                         }
                                         //alert(JSON.stringify(facetsobj[fname]));
