@@ -163,19 +163,10 @@ angular.module('searchblox.service', [])
             return urlParam;
         }
 
-
         function queryStringForMatchAny(queryString) {
             queryString = queryString.replace(/^\s+|\s+$/g, '').split(/[ ]+/).join('+');
             return queryString;
         }
-
-//    function startsWith(str, prefix) {
-//        return str.lastIndexOf(prefix, 0) === 0;
-//    }
-//
-//    function endsWith(str, suffix) {
-//        return str.indexOf(suffix, str.length) !== -1;
-//    }
 
         // retrieves the auto suggestions
         this.parseAutoSuggestion = function (dataobj) {
@@ -184,7 +175,6 @@ angular.module('searchblox.service', [])
                 var value = dataobj[0][i];
                 suggestions.push(value);
             }
-
             return suggestions;
         }
 
@@ -254,27 +244,91 @@ angular.module('searchblox.service', [])
         /**
          * Check if id's listed in collectionForAds are in the CollectionList
          * **/
-        function showAds(colObj, colAds, selCol){
+        function showAds(colObj, colAds){
             var colList = new Array();
             colList =  getCollectionList(colObj);
+            if(colAds !== null && colAds.length ==0){
+                return true;
+            }
             for (var col in colList) {
                 for(var ad in colAds ){
-                   // console.log("@id"+ colList[col]['@id']+" ==== "+colAds[ad]);
-                    if (colList[col]['@id'] == colAds[ad]){
-                        // loop through the selected collection
-                        if(selCol.length >0){
-                            for(var selValue in selCol ){
-                                if (selCol[selValue] == colAds[ad]){
-                                    return true;
-                                }
-                        }
-                    }else{
+                    if (colList[col]['@id'] == colAds[ad] && colList[col]['@checked'] == "true"){
                         return true;
-                        }
                     }
                 }
             }
             return false;
+        }
+
+        function computeResult(result) {
+            var computedResult = new Object();
+            computedResult = angular.copy(result);
+            var recstr = JSON.stringify(result.url);
+            var colid = result.col;
+            recstr = recstr.substring(1, recstr.length - 1);
+            var recstrf = recstr.substring(1, recstr.length);
+            var t = recstr.substring(recstr.lastIndexOf('.') + 1).toLowerCase();
+            var isImage = false;
+            var isVideo = false;
+
+            if (recstr.startsWith('http') || recstr.startsWith('https')) {
+                if (t == "jpg" || t == "jpeg" || t == "png" || t == "gif" || t == "bmp") {
+                    isImage = true;
+                } else if (t == "mpeg" || t == "mp4" || t == "flv" || t == "mpg") {
+                    isVideo = true;
+                }
+                computedResult.contentUrl = recstr;
+            } else if (recstr.startsWith('/') || recstrf.startsWith(':')) {
+                if (t == "jpg" || t == "jpeg" || t == "png" || t == "gif" || t == "bmp") {
+                    var isImage = true;
+
+                } else if (t == "mpeg" || t == "mp4" || t == "flv" || t == "mpg") {
+                    isVideo = true;
+                }
+                computedResult.contentUrl = '../servlet/FileServlet?url=' + recstr + '&col=' + colid;
+                if (result.url.lastIndexOf('http', 0) === 0) {
+                    computedResult.contentUrl = result.url;
+                }
+            }
+            else if (result.url.lastIndexOf('db', 0) === 0) {
+                computedResult.contentUrl = '../servlet/DBServlet?col=' + result.col + '&id=' + result.uid;
+            }
+            else if (result.url.split(':')[0] == 'eml') {
+                computedResult.contentUrl = '../servlet/EmailViewer?url=' + result.uid + '&col=' + result.col;
+            }
+            else {
+                computedResult.contentUrl = result.url;
+            }
+
+            if (isImage) {
+                computedResult.contentNature = "image";
+            }
+            else if (isVideo) {
+                computedResult.contentNature = "video";
+            } else {
+                computedResult.contentNature = "href";
+            }
+            return computedResult;
+        }
+
+        function computeAdsResult(result) {
+            var computedResult = new Object();
+            computedResult = angular.copy(result);
+            var recstr = JSON.stringify(result['@url']);
+
+            var colid = result.col;
+            recstr = recstr.substring(1, recstr.length - 1);
+            var t = recstr.substring(recstr.lastIndexOf('.') + 1).toLowerCase();
+            var isImage = false;
+
+            var tempurl = result['@url'];
+            var t = tempurl.substring(tempurl.lastIndexOf('.') + 1).toLowerCase();
+            if (t == "jpg" || t == "jpeg" || t == "png" || t == "gif" || t == "bmp") {
+                isImage = true;
+            }
+            computedResult.contentUrl = result['@url'];
+            computedResult.isImage = isImage;
+            return computedResult;
         }
 
         // Moved this functions from old code to here to perform search
@@ -289,20 +343,24 @@ angular.module('searchblox.service', [])
             if (typeof(dataobj.results) !== "undefined" && typeof(dataobj.results.result) !== "undefined") {
                 for (var item in dataobj.results.result) {
                     if (item == "@no") {
-                        resultobj["records"].push(dataobj.results.result);
+                        resultobj["records"].push(computeResult(dataobj.results.result));
                         resultobj["found"] = dataobj.results['@hits'];
                         break;
                     }
-                    resultobj["records"].push(dataobj.results.result[item]);
+                    resultobj["records"].push(computeResult(dataobj.results.result[item]));
                     resultobj["found"] = dataobj.results['@hits'];
                 }
             }
             if ( dataobj.ads !== null && typeof(dataobj.ads)!== "undefined"){
                 resultobj["ads"] = new Array();
-                resultobj["ads"] = getAds(dataobj.ads);
+                var adsArray = new Array();
+                adsArray = getAds(dataobj.ads);
+                for (var item in adsArray) {
+                    resultobj["ads"].push(computeAdsResult(adsArray[item]));// = getAds(dataobj.ads);
+                }
             }
             if (typeof( dataMap['collectionForAds']) !== "undefined" && dataMap['collectionForAds'] !== null){
-                resultobj["showAds"] = showAds(dataobj.searchform.collections,dataMap['collectionForAds'], dataMap['selectedCollection']);
+                resultobj["showAds"] = showAds(dataobj.searchform.collections,dataMap['collectionForAds']);
             }
 
             if (typeof(dataobj.facets) !== "undefined") {

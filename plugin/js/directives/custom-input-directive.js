@@ -32,10 +32,10 @@ angular.module('searchblox.custominput',[])
 
     return {
         restrict: 'A,E',
-        scope: { searchParam: '=ngModel', onsearch: '='},
+        scope: { searchParam: '=ngModel', onsearch: '=', inputstyle:"=inputstyle"},
         replace: false,
         transclude: true,
-        template: '<div class="ngCustomInput col-sm-6 col-md-6 col-md-offset-2">' +
+        template: '<div class="{{inputstyle.name}}">' +
             ' <div class="input-group input-group-sm">' +
             '    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>' +
             '    <input class="form-control" type="text"' +

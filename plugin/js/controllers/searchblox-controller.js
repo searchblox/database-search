@@ -36,7 +36,8 @@ angular.module('searchblox.controller', [])
             $scope.initAds = 1;
             $scope.maxAdsLimit = 2;
             $scope.dataMap = new Object();
-
+            $scope.inputClass = {};
+            $scope.inputClass.name = "ngCustomInput col-sm-8 col-md-8 col-md-offset-2";
 
             // load autosuggest items
             $scope.loadItems = function (term) {
@@ -66,7 +67,6 @@ angular.module('searchblox.controller', [])
                         }
 
                         if (typeof($scope.dataMap['collectionString']) == "undefined" || $scope.dataMap['collectionString'] == null || $scope.dataMap['collectionString'] === "") {
-                            $scope.dataMap['selectedCollection'] = data.collection;
                             $scope.dataMap['collectionString'] = searchbloxService.getCollectionValues(data.collection);
                         }
 
@@ -131,6 +131,7 @@ angular.module('searchblox.controller', [])
                     // $scope.getTopClicked();
                     //$scope.getTagCloud();
                     $scope.startedSearch = true;
+                    $scope.inputClass.name = "ngCustomInput col-sm-6 col-md-6 col-md-offset-2";
                 });
             }
 

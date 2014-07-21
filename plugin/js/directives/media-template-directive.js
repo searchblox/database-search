@@ -22,17 +22,16 @@ angular.module('searchblox.contentItem', []).
         }
 
         var linker = function(scope, element, attrs) {
-            scope.computeResultToBind(scope.content);
             scope.$watch(function () {
-                if (scope.contentUrl && scope.contentType == "video") {
-                    scope.url = $sce.trustAsResourceUrl(scope.contentUrl);
+                if (scope.content.contentUrl && scope.content.contentNature == "video") {
+                    scope.url = $sce.trustAsResourceUrl(scope.content.contentUrl);
                 }
                 else {
-                    scope.url = scope.contentUrl;
+                    scope.url = scope.content.contentUrl;
                 }
             });
 
-            var loader = getTemplate(scope.contentType);
+            var loader = getTemplate(scope.content.contentNature);
 
             var promise = loader.success(function(html) {
                 element.html(html);
@@ -59,58 +58,6 @@ angular.module('searchblox.contentItem', []).
                     else
                         return obj;
                 }
-
-                // content url generator
-                $scope.computeResultToBind = function (result) {
-
-                    var recstr = JSON.stringify(result.url);
-                    var colid = result.col;
-                    recstr = recstr.substring(1, recstr.length - 1);
-                    var recstrf = recstr.substring(1, recstr.length);
-                    var t = recstr.substring(recstr.lastIndexOf('.') + 1).toLowerCase();
-                    var isImage = false;
-                    var isVideo = false;
-
-                    if (recstr.startsWith('http') || recstr.startsWith('https')) {
-                        if (t == "jpg" || t == "jpeg" || t == "png" || t == "gif" || t == "bmp") {
-                            isImage = true;
-                        } else if (t == "mpeg" || t == "mp4" || t == "flv" || t == "mpg") {
-                            isVideo = true;
-                        }
-                        $scope.contentUrl = recstr;
-                    } else if (recstr.startsWith('/') || recstrf.startsWith(':')) {
-                        if (t == "jpg" || t == "jpeg" || t == "png" || t == "gif" || t == "bmp") {
-                            var isImage = true;
-
-                        } else if (t == "mpeg" || t == "mp4" || t == "flv" || t == "mpg") {
-                            isVideo = true;
-                        }
-                        $scope.contentUrl = '../servlet/FileServlet?url=' + recstr + '&col=' + colid;
-                        if (result.url.lastIndexOf('http', 0) === 0) {
-                            $scope.contentUrl = result.url;
-                        }
-                    }
-                    else if (result.url.lastIndexOf('db', 0) === 0) {
-                        $scope.contentUrl = '../servlet/DBServlet?col=' + result.col + '&id=' + result.uid;
-                    }
-                    else if (result.url.split(':')[0] == 'eml') {
-                        $scope.contentUrl = '../servlet/EmailViewer?url=' + result.uid + '&col=' + result.col;
-                    }
-                    else {
-                        $scope.contentUrl = result.url;
-                    }
-
-                    if (isImage) {
-                        $scope.contentType = "image";
-                    }
-                    else if (isVideo) {
-                        $scope.contentType = "video";
-                    } else {
-                        $scope.contentType = "href";
-                    }
-
-                }
-
             }
         };
     }]);
