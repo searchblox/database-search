@@ -1,7 +1,7 @@
 faceted-search
 ==============
 
-Angular based faceted search front-end for SearchBlox
+AngularJS based faceted search front-end for SearchBlox
 
 - Download the plugin folder into the SearchBlox installation under /searchblox to use the package. 
 - Access the angularJS based search page at http://localhost:8080/searchblox/plugin/index.html
