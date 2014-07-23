@@ -32,14 +32,21 @@ To add a new facet filter, define the field name, display name and the size of t
                 {"name":"Past Year","calendar":"years","value":"1"}
             ]}
     ],
-    "collection":[], // Use collection id or list of collection ids comma separated to limit the Featured Results to be shown to just some collections
-    "collectionForAds":[], // Use collection id or list of collection ids comma separated to limit the Featured Results to be shown to just some collections 
+    
+    "collection":[], // Use collection id or list of collection ids comma separated to limit the Collections to be searched from the form field
+    
+    "collectionForAds":[], // Use collection id or list of collection ids comma separated to limit the Featured Results to be shown to just the specified collections instead of displaying the Featured Results to all collections
+    
     "sortBtns":[ // Sort buttons for any field can be added here to display at the top of the results.
 		{"field":"alpha","display":"Alphabetic"},
 		{"field":"date","display":"Date"},
 		{"field":"relevance","display":"Relevance"}
     ],
+    
     "matchAny":"off", // Match any terms "off" or "on". Default is match all terms
+    
     "sortDir":"desc", // sorting direction asc or desc for ascending or descending order
+    
     "pageSize": "10", // Number of results per page
+    
     "showAutoSuggest": "true" // turn off autosuggest by setting this value to false
