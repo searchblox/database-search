@@ -14,19 +14,19 @@ To add a new facet filter, define the field name, display name and the size of t
 
     "facets":[
         {"field": "contenttype", "display": "Content Type","size":"10"}, // term facet filters
-        {"field": "keywords",  "display": "Keywords","size":"10"},
+        {"field": "keywords",  "display": "Keywords","size":"10"}, 
         {"field": "colname","display": "Collection","size":"10"},
         {"field": "size","display":"Size", // number range facet filters
             "range":[
-            {"name":"&lt 100kB","from":"*","to":"102400"},
-            {"name":"100kB to 500kB","from":"102400","to":"512000"},
+            {"name":"&lt 100kB","from":"*","to":"102400"}, // define the from and to values to setup a range
+            {"name":"100kB to 500kB","from":"102400","to":"512000"}, 
             {"name":"500kB to 1MB","from":"512000","to":"1048576"},
             {"name":"1MB to 10MB","from":"1048576","to":"10485760"},
-            {"name":"10MB &gt","from":"10485760","to":"*"}
+            {"name":"10MB &gt","from":"10485760","to":"*"} // * can be used to define the higher or lower ranges
         ]},
         {"field": "lastmodified","display":"Modified Date", // date range facet filters
             "dateRange":[ 
-                {"name":"Last 24 hours","calendar":"days","value":"1"},
+                {"name":"Last 24 hours","calendar":"days","value":"1"}, // look back values can be specified in days, months, years within the calendar
                 {"name":"Past Week","calendar":"days","value":"7"},
                 {"name":"Past Month","calendar":"months","value":"1"},
                 {"name":"Past Year","calendar":"years","value":"1"}
