@@ -336,7 +336,8 @@ angular.module('searchblox.controller', [])
             $scope.hasInitAds = function () {
                 if ($scope.parsedSearchResults !== undefined && $scope.parsedSearchResults !== null
                     && $scope.parsedSearchResults.showAds) {
-                    if ($scope.parsedSearchResults.ads.length >= $scope.initAds){
+                    if ($scope.parsedSearchResults.ads !== null && typeof($scope.parsedSearchResults.ads)!== "undefined" &&
+                        $scope.parsedSearchResults.ads.length >= $scope.initAds){
                         return true;
                     }
                 }
@@ -346,7 +347,8 @@ angular.module('searchblox.controller', [])
             $scope.hasMoreAds = function () {
                 if ($scope.parsedSearchResults !== undefined && $scope.parsedSearchResults !== null
                     && $scope.parsedSearchResults.showAds) {
-                    if ($scope.parsedSearchResults.ads.length > $scope.maxAdsLimit){
+                    if ($scope.parsedSearchResults.ads !== null && typeof($scope.parsedSearchResults.ads)!== "undefined" &&
+                        $scope.parsedSearchResults.ads.length > $scope.maxAdsLimit){
                         return true;
                     }
                 }
