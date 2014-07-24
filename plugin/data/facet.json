@@ -27,7 +27,7 @@
 		{"field":"date","display":"Date"},
 		{"field":"relevance","display":"Relevance"}
     ],
-    "matchAny":"on",
+    "matchAny":"off",
     "sortDir":"desc",
     "pageSize": "10",
     "showAutoSuggest": "true"
