@@ -362,9 +362,9 @@ angular.module('searchblox.controller', [])
      */
     $scope.gridOptions = {};
     $scope.gridOptions.data = 'gridResultsData';
-    $scope.gridOptions.rowHeight = 50;
+    $scope.gridOptions.rowHeight = 60;
     
-    var descriptionTemplate = '<div ng-switch on="COL_FIELD" class="height100">';
+    var descriptionTemplate = '<div ng-switch on="COL_FIELD">';
         descriptionTemplate += '<div ng-switch-when="undefined" ng-show="{{row.entity.description}}">';
         descriptionTemplate += '{{row.entity.description}}';
         descriptionTemplate += '</div>';
