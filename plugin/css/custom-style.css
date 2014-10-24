@@ -69,7 +69,9 @@
     color: #333333;
     background-color: #ffffff;
 }
-
+.height100 {
+    height: 100px;
+}
 /*screen-xs*/
 @media (max-width: 768px) {
     .colorBg{background-color:#f2f2f2;}

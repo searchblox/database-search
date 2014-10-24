@@ -15,4 +15,22 @@ var KEYS = {
     comma: 188
 };
 
-angular.module('searchbloxModule', ['facetModule','searchblox.controller','searchblox.custominput','searchblox.autocomplete','searchblox.factory','searchblox.trust','searchblox.service', 'ui.bootstrap', 'ngSanitize','searchblox.contentItem','searchblox.adsItem']);
+angular.module('searchbloxModule', [
+    'facetModule',
+    'searchblox.controller',
+    'searchblox.custominput',
+    'searchblox.autocomplete',
+    'searchblox.factory',
+    'searchblox.trust',
+    'searchblox.service',
+    'ui.bootstrap',
+    'ngSanitize',
+    'searchblox.contentItem',
+    'searchblox.adsItem',
+    'ui.grid',
+    'ui.grid.resizeColumns',
+    'ui.grid.autoResize'
+])
+.run(['$rootScope', function($rootScope) {
+    $rootScope.ddate = new Date().getFullYear();
+}]);

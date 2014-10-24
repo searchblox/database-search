@@ -76,21 +76,8 @@
                     </ads-item>
                 </div>
             </div>
-            <div class="row-fluid main-section">
-                    <div class="col-fluid" ng-repeat="result  in parsedSearchResults.records track by result['@no']" ng-class-odd="'odd'" ng-class-even="'even'">
-                         <content-item  content="result">
-                          </content-item>
-                   </div>
-            </div>
-
-          <div class="row-fluid main-section">
-                <ul class="pagination">
-                    <li ng-class="{active:lnk['pageNo'] == page}"
-                        ng-repeat="lnk in parsedLinks.pages track by lnk['pageName']">
-                        <a href data-ng-click="fetchPage(lnk['pageNo'])"
-                           ng-show="lnk['pageName']">{{lnk["pageName"]}}</a>
-                    </li>
-                </ul>
+            <div class="row-fluid main-section" ng-if="parsedSearchResults.records.length">
+                <div ui-grid-resize-columns ui-grid-auto-resize ui-grid="gridOptions" class="myGrid" external-scopes="dUtils"></div>
             </div>
 
             <div class="container" ng-show="usersCount == 0">
