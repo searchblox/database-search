@@ -359,8 +359,10 @@ angular.module('searchblox.service', [])
                     resultobj["ads"].push(computeAdsResult(adsArray[item]));// = getAds(dataobj.ads);
                 }
             }
-            if (typeof( dataMap['collectionForAds']) !== "undefined" && dataMap['collectionForAds'] !== null){
-                resultobj["showAds"] = showAds(dataobj.searchform.collections,dataMap['collectionForAds']);
+            if (typeof( dataMap['collectionForAds']) !== "undefined" && dataMap['collectionForAds'] !== null) {
+                if (dataobj.searchform) {
+                    resultobj["showAds"] = showAds(dataobj.searchform.collections,dataMap['collectionForAds']);
+                }
             }
 
             if (typeof(dataobj.facets) !== "undefined") {

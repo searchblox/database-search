@@ -13,7 +13,7 @@ angular.module('searchblox.contentItem', []).
                     video: 'video.html',
                     href: 'href.html'
                 };
-
+                
             var templateUrl = baseUrl + templateMap[contentType];
             templateLoader = $http.get(templateUrl, {cache: $templateCache});
 
@@ -36,8 +36,8 @@ angular.module('searchblox.contentItem', []).
             var promise = loader.success(function(html) {
                 element.html(html);
             }).then(function (response) {
-                    element.replaceWith($compile(element.html())(scope));
-                });
+                element.replaceWith($compile(element.html())(scope));
+            });
         }
 
         return {
