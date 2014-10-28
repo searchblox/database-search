@@ -56,11 +56,6 @@
     margin-top: 12px;
 
 }
-
-/*.left-nav li a {
-    word-wrap: break-word;
-    white-space: normal;
-}*/
 .app-font{
     margin: 0;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -69,8 +64,8 @@
     color: #333333;
     background-color: #ffffff;
 }
-.height100 {
-    height: 100px;
+.modal-backdrop.am-fade {
+    background: rgba(0, 0, 0, 0.5);
 }
 /*screen-xs*/
 @media (max-width: 768px) {

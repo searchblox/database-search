@@ -27,9 +27,10 @@ angular.module('searchbloxModule', [
     'ngSanitize',
     'searchblox.contentItem',
     'searchblox.adsItem',
+    'ui.bootstrap',
     'ui.grid',
     'ui.grid.resizeColumns',
-    'ui.grid.autoResize'
+    'mgcrea.ngStrap'
 ])
 .run(['$rootScope', function($rootScope) {
     $rootScope.ddate = new Date().getFullYear();

@@ -29,7 +29,7 @@
     ],
     "matchAny":"off",
     "sortDir":"desc",
-    "pageSize": "10",
+    "pageSize": "20",
     "showAutoSuggest": "true"
 }
 

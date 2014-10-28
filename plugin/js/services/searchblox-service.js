@@ -308,6 +308,22 @@ angular.module('searchblox.service', [])
             } else {
                 computedResult.contentNature = "href";
             }
+
+            var tpl = '';
+            if (computedResult.context && angular.isObject(computedResult.context)) {
+                var text = computedResult.context['#text'];
+                var highlight = [computedResult.context['highlight']];
+                tpl += '<div><span>';
+                [text].forEach(function(v, i) {
+                    tpl += '...' + v + ' <b>' + highlight[i] + '</b>';
+                });
+                tpl += '</span></div>';
+            } else {
+                tpl += '<div>' + computedResult.description + '</div>';
+            }
+
+            computedResult.htmlDescription = tpl;
+
             return computedResult;
         }
 
