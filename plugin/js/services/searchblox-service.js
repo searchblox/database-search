@@ -315,7 +315,12 @@ angular.module('searchblox.service', [])
                 var highlight = [computedResult.context['highlight']];
                 tpl += '<div><span>';
                 [text].forEach(function(v, i) {
-                    tpl += '...' + v + ' <b>' + highlight[i] + '</b>';
+                    if (v) {
+                        tpl += '...' + v;
+                    }
+                    if (highlight[i]) {
+                        tpl += ' <b>' + highlight[i] + '</b>';
+                    }
                 });
                 tpl += '</span></div>';
             } else {
