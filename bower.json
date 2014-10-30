@@ -20,6 +20,7 @@
     "tests"
   ],
   "dependencies": {
-    "angular-strap": "~2.1.2"
+    "angular-strap": "~2.1.2",
+    "jquery-ui": "~1.11.2"
   }
 }

@@ -31,6 +31,10 @@ angular.module('searchblox.service', [])
                 values[facets[i].field] = new Object();//facets[i].display;
                 values[facets[i].field]["display"] = facets[i].display;
 
+                if (facets[i].slider) {
+                    values[facets[i].field]["slider"] = facets[i].slider;
+                }
+
                 if (facets[i].range !== undefined && facets[i].range !== null) {
                     for (var r in facets[i].range) {
                         urlParam = urlParam + '&f.' + facets[i].field + '.range=[' + facets[i].range[r]["from"] + 'TO' + facets[i].range[r]["to"] + ']';

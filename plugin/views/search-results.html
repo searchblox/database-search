@@ -3,7 +3,7 @@
         <div id="sort_btn_aligner" ng-show="parsedSearchResults.found > 0" style="margin-top:40px;margin-bottom:50px;">
             <div class="btn-group btn-group-{{type}} col-sm-6 col-md-6 col-md-offset-2" data-toggle="buttons">
                 <label class="btn btn-warning disabled btn-sm">Sort By :</label>
-                <label  ng-repeat="sortBtn in sortBtns" class="btn btn-primary btn-sm" data-ng-click="doSort(sortBtn['sortVal'])">
+                <label ng-repeat="sortBtn in sortBtns" class="btn btn-primary btn-sm" data-ng-click="doSort(sortBtn['sortVal'])">
                     {{sortBtn['display']}}
                     <input type="radio"></label>
                 </label>
@@ -42,8 +42,15 @@
 
 			<span>
             <div ng-repeat="facet in parsedSearchResults.facets">
-                <h5 style="font-weight: bold">{{facetMap[facet["name"]]["display"]}}</h5>
-                <ul>
+                <h5 style="font-weight: bold" ng-bind="facetMap[facet['name']]['display']"></h5>
+                <rw-slider
+                        range="true"
+                        ng-if="facetMap[facet['name']]['slider']"
+                        values="[0, 0]"
+                        search-name="facet['name']"
+                        search-data="facet[facet['name']][1]"
+                ></rw-slider>
+                <ul class="clearfix">
                     <li ng-repeat="filter in facet[facet['name']][1]">
                         <a href data-ng-click="doSearchByFilter(filter, facet['name'])" ng-show="filter['@name']">
                             <span ng-bind-html="filter['@name'] | trust" forcloudrel="{{filter['#text']}}"

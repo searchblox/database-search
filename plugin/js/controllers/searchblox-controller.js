@@ -222,7 +222,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
         var filterRangeCalendar = filter['@calendar'];
         var filterRangeValue = filter['@value'];
         var hasFilter = false;
-        for (var i = 0, l = $scope.selectedItems.length; i < l; i++) { // for(var obj in $scope.selectedItems){
+        for (var i = 0, l = $scope.selectedItems.length; i < l; i++) {
             var obj = $scope.selectedItems[i];
             if (obj['filterRangeFrom'] !== undefined && obj['filterRangeTo'] !== undefined) {
                 if ((obj['filterName'] === filterName) && (obj['facetName'] === facetName)
@@ -406,9 +406,14 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
         }
     ];
 
+    $scope.range = 50;
+
+    $scope.translate = function (v) {
+        console.log($scope.range, v);
+    };
+
     $scope.dUtils = {
         getLastModified: function (lastmodified) {
-            console.log(lastmodified);
             return moment(lastmodified).format("MMMM Do YYYY, h:mm:ss a");
         },
         formatData: function (obj) {

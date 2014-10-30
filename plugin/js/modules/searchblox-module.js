@@ -30,7 +30,8 @@ angular.module('searchbloxModule', [
     'ui.bootstrap',
     'ui.grid',
     'ui.grid.resizeColumns',
-    'mgcrea.ngStrap'
+    'mgcrea.ngStrap',
+    'rw.ui-slider'
 ])
 .run(['$rootScope', function($rootScope) {
     $rootScope.ddate = new Date().getFullYear();
