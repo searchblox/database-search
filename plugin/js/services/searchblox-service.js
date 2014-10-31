@@ -165,7 +165,7 @@ angular.module('searchblox.service', [])
                 urlParam = urlParam + "&enddate=" + dataMap['endDate'];
             }
             return urlParam;
-        }
+        };
 
         function queryStringForMatchAny(queryString) {
             queryString = queryString.replace(/^\s+|\s+$/g, '').split(/[ ]+/).join('+');
@@ -180,7 +180,7 @@ angular.module('searchblox.service', [])
                 suggestions.push(value);
             }
             return suggestions;
-        }
+        };
 
         function getParam(paramName, urlString) {
             paramName = paramName.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -330,8 +330,11 @@ angular.module('searchblox.service', [])
             } else {
                 tpl += '<div>' + computedResult.description + '</div>';
             }
-
             computedResult.htmlDescription = tpl;
+
+            if (computedResult.lastmodified) {
+                computedResult.lastmodified = moment(computedResult.lastmodified).format("MMMM Do YYYY, h:mm:ss a");
+            }
 
             return computedResult;
         }

@@ -13,6 +13,7 @@
     <script type="text/javascript" src="lib/json2extension.js" charset="UTF-8"></script>
 
     <script src="lib/ui-grid.min.js" charset="UTF-8"></script>
+    <script src="lib/csv.js" charset="UTF-8"></script>
     <link rel="stylesheet" type="text/css" href="css/ui-grid.min.css">
 
     <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
@@ -31,6 +32,7 @@
     <script src="js/directives/custom-input-directive.js" charset="UTF-8"></script>
     <script src="js/directives/media-template-directive.js" charset="UTF-8"></script>
     <script src="js/directives/ads-template-directive.js" charset="UTF-8"></script>
+    <script src="js/directives/rw-raw-visualize.js" charset="UTF-8"></script>
     <script src="js/factories/searchblox-factory.js" charset="UTF-8"></script>
     <script src="js/filters/searchblox-filter.js" charset="UTF-8"></script>
     <script src="js/modules/facet-module.js" charset="UTF-8"></script>
@@ -55,8 +57,7 @@
                 <autocomplete source="loadItems" ng-show="showAutoSuggest"></autocomplete>
             </custominput>
         </form>
-        <div ng-include src="'views/search-results.html'" >
-        </div>
+        <div ng-include src="'views/search-results.html'"></div>
     </div>
     <div id="footer" style="margin-top: 10px;" align="center">
     <span

@@ -64,6 +64,9 @@
     color: #333333;
     background-color: #ffffff;
 }
+#raw-chart .modal-dialog {
+    width: 85%;
+}
 .top5{margin-top:5px}
 .top10{margin-top:10px}
 .top15{margin-top:15px}
