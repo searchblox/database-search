@@ -33,7 +33,29 @@
     ],
     "matchAny": "off",
     "sortDir": "desc",
-    "pageSize": "20",
-    "showAutoSuggest": "true"
+    "pageSize": "10",
+    "showAutoSuggest": "true",
+    "gridColumns": [
+        {
+            "name": "Id",
+            "width": 50,
+            "field": "@no"
+        },
+        {
+            "name": "Title",
+            "cellTemplate": "<button class=\"text-left btn-link\" data-ng-click=\"getExternalScopes().modal(row.entity)\"><b ng-bind=\"COL_FIELD\"></b></button>",
+            "field": "title"
+        },
+        {
+            "name": "Description",
+            "field": "htmlDescription",
+            "cellTemplate": "<div ng-bind-html=\"row.entity.htmlDescription\"></div>"
+        },
+        {
+            "name": "Last modified",
+            "field": "lastmodified",
+            "cellTemplate": "<i ng-bind=\"COL_FIELD\"></i>"
+        }
+    ]
 }
 

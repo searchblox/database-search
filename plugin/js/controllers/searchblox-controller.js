@@ -15,7 +15,9 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
     '$timeout',
     '$modal',
     '$parse',
-    '$sce', function ($rootScope, $scope, $http, $location, searchbloxService, searchbloxFactory, facetFactory, $q, $timeout, $modal, $parse, $sce) {
+    '$filter',
+    'uiGridExporterConstants',
+    '$sce', function ($rootScope, $scope, $http, $location, searchbloxService, searchbloxFactory, facetFactory, $q, $timeout, $modal, $parse, $filter, uiGridExporterConstants, $sce) {
 
     var searchUrl = '/searchblox/servlet/SearchServlet';
     var autoSuggestUrl = '/searchblox/servlet/AutoSuggest';
@@ -48,6 +50,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
     $scope.dataMap = new Object();
     $scope.inputClass = {};
     $scope.inputClass.name = "ngCustomInput col-sm-8 col-md-8 col-md-offset-2";
+    $scope.gridColumns = [];
 
     // load autosuggest items
     $scope.loadItems = function (term) {
@@ -115,10 +118,15 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
                     $scope.showAutoSuggest = data.showAutoSuggest;
                 }
 
+                if (typeof($scope.gridColumns) == "undefined" || $scope.gridColumns == null || $scope.gridColumns.length < 1) {
+                    $scope.gridColumns = data.gridColumns;
+                }
+
 
                 $scope.dataMap['facet'] = 'on';
                 $scope.dataMap['xsl'] = "json";
 
+                $scope.gridInit();
             }
         });
     };
@@ -358,88 +366,93 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
     /**
      * Grid options
      */
+    $scope.gridInit = function() {
+        var footerTemplate = '<div class="ui-grid-bottom-panel">' +
+            '<ul class="pager">' +
+            '<li><a href="#" ng-click="getExternalScopes().gridApi.pagination.previousPage()">Previous</a></li>' +
+            '<li><a href="#" ng-click="getExternalScopes().gridApi.pagination.nextPage()">Next</a></li>' +
+            '<li>Page: {{ getExternalScopes().gridApi.pagination.getPage() }}</li>' +
+            '<li>Total pages: {{ getExternalScopes().gridApi.pagination.getTotalPages() }}</li>' +
+            '</ul></div>';
 
-    var footerTemplate = '<div class="ui-grid-bottom-panel">' +
-        '<ul class="pager">' +
-        '<li><a href="#" ng-click="getExternalScopes().gridApi.pagination.previousPage()">Previous</a></li>' +
-        '<li><a href="#" ng-click="getExternalScopes().gridApi.pagination.nextPage()">Next</a></li>' +
-        '<li>Page: {{ getExternalScopes().gridApi.pagination.getPage() }}</li>' +
-        '<li>Total pages: {{ getExternalScopes().gridApi.pagination.getTotalPages() }}</li>' +
-        '</ul></div>';
+        var modalTemplate = function (c) {
 
-    var modalTemplate = function(c) {
-        var id = c['@no'] || '',
-            title = c.title || '',
-            description = c.htmlDescription,
-            lastModified = $scope.dUtils.getLastModified(c.lastmodified);
+            var fields = $scope.gridColumns.map(function(v) { return v['field']; });
+            var displayAs = $scope.gridColumns.map(function(v) { return v['name']; });
 
-        var x = '<table class="table table-striped table-bordered"><tbody>';
-        x += '<tr><th>Id:</th><td>'+id+'</td></tr>';
-        x += '<tr><th>Title:</th><td>'+title+'</td></tr>';
-        x += '<tr><th>Description:</th><td>'+description+'</td></tr>';
-        x += '<tr><th>Last Modified:</th><td><i>'+lastModified+'</i></td></tr>';
-        x += '</tbody></table>';
-        return x;
-    };
+            var x = '<table class="table table-striped table-bordered"><tbody>';
 
-    $scope.gridOptions = {
-        data: 'gridResultsData',
-        rowHeight: 60,
-        onRegisterApi: function (gridApi) {
-            $scope.gridApi = gridApi;
-        },
-        showFooter: false,
-        footerTemplate: footerTemplate
-    };
+            fields.forEach(function(v, i) {
+                x += '<tr>';
+                x += '<th>' + displayAs[i] + '</th><td>' + c[v] + '</td>';
+                x += '</tr>';
+            });
+            x += '</tbody></table>';
+            return x;
+        };
 
-    $scope.gridOptions.columnDefs = [
-        {name: 'id', width: 50, field: '@no'},
-        {
-            name: 'title',
-            cellTemplate: '<button class="text-left btn-link" data-ng-click="getExternalScopes().modal(row.entity)"><b ng-bind="COL_FIELD"></b></button>'
-        },
-        {name: 'description', field: 'context', cellTemplate: '<div ng-bind-html="row.entity.htmlDescription"></div>'},
-        {
-            name: 'Last modified',
-            field: 'lastmodified',
-            cellTemplate: '<i ng-bind="getExternalScopes().getLastModified(COL_FIELD)"></i>'
-        }
-    ];
+        $scope.gridOptions = {
+            data: 'gridResultsData',
+            rowHeight: 60,
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            showFooter: false,
+            footerTemplate: footerTemplate
+        };
 
-    $scope.range = 50;
+        $scope.gridOptions.columnDefs = $scope.gridColumns;
 
-    $scope.translate = function (v) {
-        console.log($scope.range, v);
-    };
+        $scope.dUtils = {
+            formatData: function (obj) {
+                if (!angular.isArray(obj))
+                    return [obj];
+                else
+                    return obj;
+            },
+            modal: function (field) {
+                $modal({
+                    title: field.title,
+                    content: modalTemplate(field),
+                    html: true
+                })
+            },
+            gridApi: $scope.gridApi
+        };
 
-    $scope.dUtils = {
-        getLastModified: function (lastmodified) {
-            return moment(lastmodified).format("MMMM Do YYYY, h:mm:ss a");
-        },
-        formatData: function (obj) {
-            if (!angular.isArray(obj))
-                return [obj];
-            else
-                return obj;
-        },
-        modal: function(field) {
-            $modal({
-                title: field.title,
-                content: modalTemplate(field),
-                html: true
-            })
-        },
-        gridApi: $scope.gridApi
-    };
+        $scope.dumpCSV = function() {
+            var exporterElem = $('.custom-csv-link-location.hidden');
+            $scope.gridApi.exporter.csvExport(uiGridExporterConstants.ALL, uiGridExporterConstants.ALL, exporterElem);
+            return $timeout(function() {
+                $scope.gridResultsDataCSV = exporterElem.find('a').attr('href').replace('data:text/csv;charset=UTF-8,', '');
+            }, 0);
+        };
 
-    $scope.bindGridSearchResults = function (v) {
-        $scope.gridResultsData = [];
+        $scope.bindGridSearchResults = function (v) {
+            $scope.gridResultsData = [];
 
-        if (v == null || !angular.isObject(v.records)) {
-            return false
-        }
+            if (v == null || !angular.isObject(v.records)) {
+                return false
+            }
 
-        $scope.gridResultsData = v.records;
-    };
+            $scope.gridResultsData = v.records;
+        };
 
+        $scope.openVisualBox = function () {
+            if ($scope.gridResultsData.length) {
+                $scope.gridResultsDataCSV = '';
+                $scope.dumpCSV().then(function() {
+                    var data = decodeURIComponent($scope.gridResultsDataCSV);
+                    data = $filter('htmlToPlaintext')(data);
+                    $modal({
+                        title: 'New Visualization',
+                        template: 'views/raw-chart.html',
+                        content: data
+                    });
+                });
+            } else {
+                alert('No data inside grid');
+            }
+        };
+    }
 }]);
