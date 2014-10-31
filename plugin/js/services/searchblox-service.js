@@ -31,6 +31,10 @@ angular.module('searchblox.service', [])
                 values[facets[i].field] = new Object();//facets[i].display;
                 values[facets[i].field]["display"] = facets[i].display;
 
+                if (facets[i].slider) {
+                    values[facets[i].field]["slider"] = facets[i].slider;
+                }
+
                 if (facets[i].range !== undefined && facets[i].range !== null) {
                     for (var r in facets[i].range) {
                         urlParam = urlParam + '&f.' + facets[i].field + '.range=[' + facets[i].range[r]["from"] + 'TO' + facets[i].range[r]["to"] + ']';
@@ -161,7 +165,7 @@ angular.module('searchblox.service', [])
                 urlParam = urlParam + "&enddate=" + dataMap['endDate'];
             }
             return urlParam;
-        }
+        };
 
         function queryStringForMatchAny(queryString) {
             queryString = queryString.replace(/^\s+|\s+$/g, '').split(/[ ]+/).join('+');
@@ -176,7 +180,7 @@ angular.module('searchblox.service', [])
                 suggestions.push(value);
             }
             return suggestions;
-        }
+        };
 
         function getParam(paramName, urlString) {
             paramName = paramName.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -308,6 +312,30 @@ angular.module('searchblox.service', [])
             } else {
                 computedResult.contentNature = "href";
             }
+
+            var tpl = '';
+            if (computedResult.context && angular.isObject(computedResult.context)) {
+                var text = computedResult.context['#text'];
+                var highlight = [computedResult.context['highlight']];
+                tpl += '<div><span>';
+                [text].forEach(function(v, i) {
+                    if (v) {
+                        tpl += '...' + v;
+                    }
+                    if (highlight[i]) {
+                        tpl += ' <b>' + highlight[i] + '</b>';
+                    }
+                });
+                tpl += '</span></div>';
+            } else {
+                tpl += '<div>' + computedResult.description + '</div>';
+            }
+            computedResult.htmlDescription = tpl;
+
+            if (computedResult.lastmodified) {
+                computedResult.lastmodified = moment(computedResult.lastmodified).format("MMMM Do YYYY, h:mm:ss a");
+            }
+
             return computedResult;
         }
 
