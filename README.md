@@ -16,7 +16,9 @@ To add a new facet filter, define the field name, display name and the size of t
         {"field": "contenttype", "display": "Content Type","size":"10"}, // term facet filters
         {"field": "keywords",  "display": "Keywords","size":"10"}, 
         {"field": "colname","display": "Collection","size":"10"},
-        {"field": "size","display":"Size", // number range facet filters
+        {"field": // number range facet filters
+            "size","display":"Size",
+            "slider": true, // true/false to enable/disable slider filter
             "range":[
             {"name":"&lt 100kB","from":"*","to":"102400"}, // define the from and to values to setup a range
             {"name":"100kB to 500kB","from":"102400","to":"512000"}, 
@@ -50,3 +52,19 @@ To add a new facet filter, define the field name, display name and the size of t
     "pageSize": "10", // Number of results per page
     
     "showAutoSuggest": "true" // turn off autosuggest by setting this value to false
+
+    // grid columns
+    "gridColumns": [
+        {
+            "name": "Id", // display text on column header
+            "width": 50, // size of column
+            "field": "@no" // exact match of field name from response
+            "cellTemplate": "<i ng-bind=\"COL_FIELD\"></i>" // custom template for column (COL_FIELD is dynamic value)
+        },
+        {
+            "name": "Title",
+            "cellTemplate": "<button><b ng-bind=\"COL_FIELD\"></b></button>",
+            "field": "title"
+        }
+        // ...
+    ]
