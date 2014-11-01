@@ -4,7 +4,7 @@
 
 //SERVICE
 angular.module('searchblox.service', [])
-    .service('searchbloxService', ['$rootScope', function ($rootScope) {
+    .service('searchbloxService', ['$rootScope', 'searchbloxFactory', function ($rootScope, searchbloxFactory) {
 
         var noffilters;
         this.facetFieldsMap = new Object();
@@ -265,7 +265,7 @@ angular.module('searchblox.service', [])
         }
 
         function computeResult(result) {
-            var computedResult = new Object();
+            var computedResult = {};
             computedResult = angular.copy(result);
             var recstr = JSON.stringify(result.url);
             var colid = result.col;
@@ -336,11 +336,13 @@ angular.module('searchblox.service', [])
                 computedResult.lastmodified = moment(computedResult.lastmodified).format("MMMM Do YYYY, h:mm:ss a");
             }
 
+            searchbloxFactory.parseTextToObject(computedResult);
+
             return computedResult;
         }
 
         function computeAdsResult(result) {
-            var computedResult = new Object();
+            var computedResult = {};
             computedResult = angular.copy(result);
             var recstr = JSON.stringify(result['@url']);
 
