@@ -48,7 +48,7 @@
                         ng-if="facetMap[facet['name']]['slider']"
                         values="[0, 0]"
                         search-name="facet['name']"
-                        search-data="facet[facet['name']][1]"
+                        search-data="facetMap[facet['name']]['range']"
                 ></rw-slider>
                 <ul class="clearfix">
                     <li ng-repeat="filter in facet[facet['name']][1]">
