@@ -56,15 +56,23 @@ To add a new facet filter, define the field name, display name and the size of t
     // grid columns
     "gridColumns": [
         {
-            "name": "Id", // display text on column header
-            "width": 50, // size of column
-            "field": "@no" // exact match of field name from response
-            "cellTemplate": "<i ng-bind=\"COL_FIELD\"></i>" // custom template for column (COL_FIELD is dynamic value)
+            "name": "Id",
+            "width": 50,
+            "field": "@no"
+            "cellTemplate": "<i ng-bind=\"COL_FIELD\"></i>" 
         },
+        // To add new column
         {
+            // Name to display on column header (required)
             "name": "Title",
+            
+            // exact match of field name from response  (required)
+            "field": "title",
+            
+            // size of column (optional)
+            "width": 50,
+            
+            // custom template for column (COL_FIELD is dynamic value) (optional)
             "cellTemplate": "<button><b ng-bind=\"COL_FIELD\"></b></button>",
-            "field": "title"
-        }
-        // ...
+        },
     ]
