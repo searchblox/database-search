@@ -4,7 +4,7 @@
 
 //SERVICE
 angular.module('searchblox.service', [])
-    .service('searchbloxService', ['$rootScope', 'searchbloxFactory', function ($rootScope, searchbloxFactory) {
+    .service('searchbloxService', ['$rootScope', 'searchbloxFactory', '$filter', function ($rootScope, searchbloxFactory, $filter) {
 
         var noffilters;
         this.facetFieldsMap = new Object();
@@ -330,7 +330,10 @@ angular.module('searchblox.service', [])
             } else {
                 tpl += '<div>' + computedResult.description + '</div>';
             }
-            computedResult.htmlDescription = tpl;
+
+            var $empty_desc = $filter('htmlToPlaintext')(tpl);
+
+            computedResult.htmlDescription = (($empty_desc) ? tpl : " ");
 
             if (computedResult.lastmodified) {
                 computedResult.lastmodified = moment(computedResult.lastmodified).format("MMMM Do YYYY, h:mm:ss a");
