@@ -61,22 +61,33 @@
                 options.min = +scope.min;
             }
 
-            if (scope.searchData && angular.isObject(scope.searchData)) {
-                var total = Object.keys(scope.searchData);
-                var length = total.length;
-                var min = scope.searchData[0]['@from'];
+            if (scope.searchData) {
+                var propertyKeys = Object.keys(scope.searchData);
+                var length = propertyKeys.length;
+                var min = 0, max = 0;
+                console.log(scope.searchData[0]['from'], scope.searchData[0]);
 
-                var max = scope.searchData[(length - 1)]['@to'];
+                if (propertyKeys['from']) {
+                    min = propertyKeys['from'];
+                    max = propertyKeys['to'];
+                } else {
+                    min = scope.searchData[0]['from'];
+                    max = scope.searchData[(length - 1)]['to'];
+                    if (max === '*') {
+                        max = scope.searchData[(length - 1)]['from'];
+                    }
+                }
+
                 if (min === '*') {
                     min = 0;
                 }
 
-                if (max === '*') {
-                    max = scope.searchData[(length - 1)]['@from'];
+                if (String(max / 1024).indexOf('.') < 0) {
+                    max = max / 1024;
                 }
 
                 scope.min = min;
-                scope.max = options.max = max / 1024;
+                scope.max = options.max = max;
             }
 
             if (scope.step && +scope.step) {
