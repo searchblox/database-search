@@ -383,8 +383,15 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
             var x = '<table class="table table-striped table-bordered"><tbody>';
 
             fields.forEach(function(v, i) {
+                var _c = c[v];
+
+                if (_c == null && v.indexOf('.') > -1) {
+                    var _v = v.split('.'), _v1 = _v[0], _v2 = _v[1];
+                    _c = c[_v1][_v2];
+                }
+
                 x += '<tr>';
-                x += '<th>' + displayAs[i] + '</th><td>' + (c[v]?c[v]:'') + '</td>';
+                x += '<th>' + displayAs[i] + '</th><td>' + (_c?_c:'') + '</td>';
                 x += '</tr>';
             });
             x += '</tbody></table>';
