@@ -384,7 +384,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
 
             fields.forEach(function(v, i) {
                 x += '<tr>';
-                x += '<th>' + displayAs[i] + '</th><td>' + c[v] + '</td>';
+                x += '<th>' + displayAs[i] + '</th><td>' + (c[v]?c[v]:'') + '</td>';
                 x += '</tr>';
             });
             x += '</tbody></table>';

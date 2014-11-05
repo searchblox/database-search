@@ -7,8 +7,8 @@ angular.module('searchblox.service', [])
     .service('searchbloxService', ['$rootScope', 'searchbloxFactory', '$filter', function ($rootScope, searchbloxFactory, $filter) {
 
         var noffilters;
-        this.facetFieldsMap = new Object();
-        //this.sortBtns = new Object();
+        this.facetFieldsMap = {};
+        //this.sortBtns = {};
         //this.collectionArray = new Array();
 
         function isBlank(strValue) {
@@ -20,7 +20,7 @@ angular.module('searchblox.service', [])
          * */
         this.getFacetFields = function (facets) {
             var fields = "";
-            var values = new Object();
+            var values = {};
             var urlParam = "";
             for (var i in facets) {
 
@@ -28,7 +28,7 @@ angular.module('searchblox.service', [])
                 if (facets[i].size !== undefined && facets[i].size !== null) {
                     fields = fields + '&f.' + facets[i].field + '.size=' + facets[i].size;
                 }
-                values[facets[i].field] = new Object();//facets[i].display;
+                values[facets[i].field] = {};
                 values[facets[i].field]["display"] = facets[i].display;
 
                 if (facets[i].slider) {
@@ -62,10 +62,10 @@ angular.module('searchblox.service', [])
          **/
         this.getSortBtns = function (sortBtns) {
             //var field = "";
-            var values = new Object();
+            var values = {};
             for (var i in sortBtns) {
                 //if(field == "") field = sortBtns[i].field;
-                values[sortBtns[i].field] = new Object();
+                values[sortBtns[i].field] = {};
                 values[sortBtns[i].field]["display"] = sortBtns[i].display;
                 values[sortBtns[i].field]["sortVal"] = sortBtns[i].field;
             }
@@ -196,7 +196,7 @@ angular.module('searchblox.service', [])
         }
 
         this.parseLinks = function (dataobj, facetFieldsMap) {
-            var resultobj = new Object();
+            var resultobj = {};
             // resultobj["npages"] = new Array();
             resultobj["pages"] = new Array();
             resultobj["sort"] = new Array();
@@ -208,7 +208,7 @@ angular.module('searchblox.service', [])
                         || dataobj.links.link[item]["@page"] === "relevance")) {
                         resultobj["sort"].push(dataobj.links.link[item]);
                     } else {
-                        var linkobj = new Object();
+                        var linkobj = {};
                         linkobj['pageName'] = dataobj.links.link[item]["@page"];
                         linkobj['pageNo'] = getParam('page', dataobj.links.link[item]["@url"]);
                         linkobj['url'] = dataobj.links.link[item]["@url"]
@@ -368,7 +368,7 @@ angular.module('searchblox.service', [])
         // read the result object and return useful vals depending on if ES or SOLR
         // returns an object that contains things like ["data"] and ["facets"]
         this.parseResults = function (dataobj, facetFieldsMap, dataMap) {
-            var resultobj = new Object();
+            var resultobj = {};
             resultobj["records"] = new Array();
             resultobj["start"] = "";
             resultobj["found"] = "0";
@@ -400,13 +400,13 @@ angular.module('searchblox.service', [])
 
             if (typeof(dataobj.facets) !== "undefined") {
                 if (dataobj.facets) {
-                    resultobj["facets"] = new Object();
+                    resultobj["facets"] = {};
                     if (dataobj.facets.facet) {
                         var fname = "";
                         var count = "";
-                        var facetsobj = new Object();
+                        var facetsobj = {};
                         for (var item in dataobj.facets.facet) {
-                            var values = new Object();
+                            var values = {};
                             if (item == "@name")
                                 fname = dataobj.facets.facet[item];
                             else if (item == "@count")
@@ -415,7 +415,7 @@ angular.module('searchblox.service', [])
                                 for (var thing in dataobj.facets.facet[item]) {
                                     values[thing] = dataobj.facets.facet[item][thing];
                                 }
-                                facetsobj[fname] = new Object();
+                                facetsobj[fname] = {};
                                 facetsobj['name'] = fname;
                                 facetsobj[fname] = [count, values];
                             }
@@ -428,15 +428,15 @@ angular.module('searchblox.service', [])
                         for (n in dataobj.facets) {
                             var fname = "";
                             var count = "";
-                            var facetsobj = new Object();
+                            var facetsobj = {};
                             for (var item in dataobj.facets[n]) {
-                                var values = new Object();
+                                var values = {};
                                 if (item == "@name") {
                                     fname = dataobj.facets[n][item];
 
                                     if (fname === "lastmodified")//|| fname==="size"
                                     {
-                                        facetsobj[fname] = new Object();
+                                        facetsobj[fname] = {};
                                         //alert(JSON.stringify(dataobj.facets[n]['int']));
                                         for (var t1 in dataobj.facets[n]['int']) {
                                             var data = new Array();
@@ -493,7 +493,7 @@ angular.module('searchblox.service', [])
                                             values[thing] = dataobj.facets[n][item][thing];
                                         }
                                     }
-                                    facetsobj[fname] = new Object();
+                                    facetsobj[fname] = {};
                                     facetsobj['name'] = fname;
                                     facetsobj[fname] = [count, values];
                                 }
