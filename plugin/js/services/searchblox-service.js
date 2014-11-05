@@ -333,7 +333,11 @@ angular.module('searchblox.service', [])
 
             var $empty_desc = $filter('htmlToPlaintext')(tpl);
 
-            computedResult.htmlDescription = (($empty_desc) ? tpl : " ");
+            if (typeof $empty_desc === 'string' && $empty_desc != 'null') {
+                computedResult.htmlDescription = tpl;
+            } else {
+                computedResult.htmlDescription = ' ';
+            }
 
             if (computedResult.lastmodified) {
                 computedResult.lastmodified = moment(computedResult.lastmodified).format("MMMM Do YYYY, h:mm:ss a");
