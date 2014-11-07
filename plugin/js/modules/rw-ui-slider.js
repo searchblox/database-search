@@ -116,7 +116,7 @@
                     obj['@to'] = scope.fromToTo[1];
 
                     obj['@name'] = scope.kbValues.join(' to ');
-                    scope.$parent.doSearchByFilter(obj, scope.searchName);
+                    scope.$parent.doSearchByFilter(obj, scope.searchName, true);
                 }
 
                 if (typeof scope.stop === 'function') {
