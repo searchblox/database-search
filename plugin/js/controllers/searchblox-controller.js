@@ -386,8 +386,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
                 var _c = c[v];
 
                 if (_c == null && v.indexOf('.') > -1) {
-                    var _v = v.split('.'), _v1 = _v[0], _v2 = _v[1];
-                    _c = c[_v1][_v2];
+                    _c = Object.resolve(v, c);
                 }
 
                 x += '<tr>';
