@@ -139,7 +139,6 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
     };
     // Search function
     $scope.doSearch = function () {
-
         var urlParams = searchbloxService.getUrlParams(searchUrl, $scope.query,
             $scope.rangeFilter, $scope.filterFields, $scope.page, $scope.dataMap);
         searchbloxFactory.getResponseData(urlParams).then(function (searchResults) {
@@ -218,10 +217,10 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
             $scope.from = 0;
             $scope.dosearch();
         }
-    }
+    };
 
     // Function for search by filter.
-    $scope.doSearchByFilter = function (filter, facetName) {
+    $scope.doSearchByFilter = function (filter, facetName, rSlider) {
         $scope.page = 1;
         var filters = "";
         var filterName = filter['@name'];
@@ -229,9 +228,18 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
         var filterRangeTo = filter['@to'];
         var filterRangeCalendar = filter['@calendar'];
         var filterRangeValue = filter['@value'];
+        var slider = filter['slider'] = (rSlider || false);
+        var slider_index = -1;
+
         var hasFilter = false;
         for (var i = 0, l = $scope.selectedItems.length; i < l; i++) {
             var obj = $scope.selectedItems[i];
+
+            if (slider && slider == true && obj['slider'] === slider) {
+                hasFilter = true;
+                slider_index = i;
+            }
+
             if (obj['filterRangeFrom'] !== undefined && obj['filterRangeTo'] !== undefined) {
                 if ((obj['filterName'] === filterName) && (obj['facetName'] === facetName)
                     && obj['filterRangeFrom'] === filterRangeFrom
@@ -242,8 +250,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
                 else {
                     filters = filters + '&f.' + obj['facetName'] + '.filter=[' + obj['filterRangeFrom'] + 'TO' + obj['filterRangeTo'] + ']';
                 }
-            }
-            else if (obj['filterRangeCalendar'] !== undefined && obj['filterRangeValue'] !== undefined) {
+            } else if (obj['filterRangeCalendar'] !== undefined && obj['filterRangeValue'] !== undefined) {
                 if ((obj['filterName'] === filterName) && (obj['facetName'] === facetName)
                     && obj['filterRangeCalendar'] === filterRangeCalendar
                     && obj['filterRangeValue'] === filterRangeValue
@@ -253,8 +260,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
                 else {
                     filters = filters + '&f.' + obj['facetName'] + '.filter=[' + moment().subtract(obj['filterRangeCalendar'], obj['filterRangeValue']).format("YYYY-MM-DDTHH:mm:ss") + 'TO*]';
                 }
-            }
-            else {
+            } else {
                 if ((obj['filterName'] === filterName) && (obj['facetName'] === facetName)) {
                     hasFilter = true;
                 }
@@ -264,31 +270,47 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
             }
         }
 
-        if (!hasFilter) {
-            var new_object = new Object();
-            if (filterRangeFrom !== undefined && filterRangeTo !== undefined) {
-                $scope.filterFields = filters + '&f.' + facetName + '.filter=[' + filterRangeFrom + 'TO' + filterRangeTo + ']';
-            }
-            else if (filterRangeCalendar !== undefined && filterRangeValue !== undefined) {
-                $scope.filterFields = filters + '&f.' + facetName + '.filter=[' + moment().subtract(filterRangeCalendar, filterRangeValue).format("YYYY-MM-DDTHH:mm:ss") + 'TO*]';
-            }
-            else {
-                $scope.filterFields = filters + "&f." + facetName + ".filter=" + filterName;
-            }
-            new_object["id"] = $scope.selectedItems.size;
-            new_object['filterName'] = filterName;
-            new_object['facetName'] = facetName;
-            new_object['filterRangeFrom'] = filterRangeFrom;
-            new_object['filterRangeTo'] = filterRangeTo;
-            new_object['filterRangeCalendar'] = filterRangeCalendar;
-            new_object['filterRangeValue'] = filterRangeValue;
-            new_object['pageNo'] = $scope.prevPage;
-            $scope.prevPage = $scope.page;
-            //it's up to you how you want to structure the new_object.
-            $scope.showInput = true;
-            $scope.selectedItems.push(new_object);
-        }
+        var newFilter = {};
+        newFilter["id"] = $scope.selectedItems.size;
+        newFilter['filterName'] = filterName;
+        newFilter['facetName'] = facetName;
+        newFilter['filterRangeFrom'] = filterRangeFrom;
+        newFilter['filterRangeTo'] = filterRangeTo;
+        newFilter['filterRangeCalendar'] = filterRangeCalendar;
+        newFilter['filterRangeValue'] = filterRangeValue;
+        newFilter['slider'] = slider;
+        newFilter['pageNo'] = $scope.prevPage;
+        $scope.prevPage = $scope.page;
 
+        $scope.prepareFilters = function() {
+            if (!hasFilter || slider_index > -1) {
+                if (filterRangeFrom !== undefined && filterRangeTo !== undefined) {
+                    var rangeFilter = '';
+                    if (rSlider) {
+                        rangeFilter = '&f.' + facetName + '.filter=[' + filterRangeFrom + 'TO' + filterRangeTo + ']';
+                    } else {
+                        rangeFilter = filters + '&f.' + facetName + '.filter=[' + filterRangeFrom + 'TO' + filterRangeTo + ']';
+                    }
+
+                    $scope.filterFields = rangeFilter
+                }
+                else if (filterRangeCalendar !== undefined && filterRangeValue !== undefined) {
+                    $scope.filterFields = filters + '&f.' + facetName + '.filter=[' + moment().subtract(filterRangeCalendar, filterRangeValue).format("YYYY-MM-DDTHH:mm:ss") + 'TO*]';
+                }
+                else {
+                    $scope.filterFields = filters + "&f." + facetName + ".filter=" + filterName;
+                }
+
+                $scope.showInput = true;
+                if (slider_index > -1) {
+                    $scope.selectedItems[slider_index] = newFilter;
+                } else {
+                    $scope.selectedItems.push(newFilter);
+                }
+            }
+        };
+
+        $scope.prepareFilters();
         $scope.doSearch();
     };
 
@@ -386,8 +408,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
                 var _c = c[v];
 
                 if (_c == null && v.indexOf('.') > -1) {
-                    var _v = v.split('.'), _v1 = _v[0], _v2 = _v[1];
-                    _c = c[_v1][_v2];
+                    _c = Object.resolve(v, c);
                 }
 
                 x += '<tr>';

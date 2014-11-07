@@ -51,9 +51,9 @@
                         search-data="facetMap[facet['name']]['range']"
                 ></rw-slider>
                 <ul class="clearfix">
-                    <li ng-repeat="filter in facet[facet['name']][1]" ng-if="filter['#text']">
-                        <a href data-ng-click="doSearchByFilter(filter, facet['name'])" ng-show="filter['@name']">
-                            <span ng-bind-html="filter['@name'] | trust" forcloudrel="{{filter['#text']}}" forcloudtag="{{filter['@name']}}" class="facetText"></span>
+                    <li data-ng-repeat="filter in facet[facet['name']][1]" data-ng-if="filter['#text']">
+                        <a href data-ng-click="doSearchByFilter(filter, facet['name'])" data-ng-show="filter['@name']">
+                            <span data-ng-bind-html="filter['@name'] | trust" forcloudrel="{{filter['#text']}}" forcloudtag="{{filter['@name']}}" class="facetText"></span>
                             ({{filter["#text"]}})
                         </a>
                     </li>
