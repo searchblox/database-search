@@ -40,7 +40,7 @@
             </div>
 
 			<span>
-            <div ng-repeat="facet in parsedSearchResults.facets" ng-if="parsedSearchResults.records.length">
+            <div ng-repeat="facet in parsedSearchResults.facets">
                 <h5 style="font-weight: bold" ng-bind="facetMap[facet['name']]['display']"></h5>
                 <rw-slider
                         range="true"
