@@ -82,11 +82,12 @@
                 }
 
                 if (String(max / 1024).indexOf('.') < 0) {
-                    max = max / 1024;
+                    // max = max / 1024;
                 }
 
-                scope.min = min;
-                scope.max = options.max = max;
+                scope.min = bytesToSize(min, true);
+                scope.max = bytesToSize(max, true);
+                options.max = max;
             }
 
             if (scope.step && +scope.step) {
@@ -104,8 +105,8 @@
                 scope.$apply(function () {
                     scope.fromToTo = ui.values;
                     scope.kbValues = angular.copy(ui.values);
-                    scope.kbValues[0] = (Math.floor(scope.kbValues[0])) + 'kb';
-                    scope.kbValues[1] = (Math.floor(scope.kbValues[1])) + 'kb';
+                    scope.kbValues[0] = bytesToSize(scope.kbValues[0], true);
+                    scope.kbValues[1] = bytesToSize(scope.kbValues[1], true);
                 });
             };
 
@@ -113,6 +114,11 @@
                 if (scope.searchName) {
                     var obj = {};
                     obj['@from'] = scope.fromToTo[0];
+
+                    if (obj['@from'] === 0) {
+                        obj['@from'] = '*'
+                    }
+
                     obj['@to'] = scope.fromToTo[1];
 
                     obj['@name'] = scope.kbValues.join(' to ');
@@ -127,9 +133,23 @@
             var container = $(elem).find('#rw-slider-container');
 
             $(container).slider(options);
-            var labelTmpl = '<div class="bottom5"><small><span class="rw-from" ng-bind="kbValues[0]"></span> - <span class="rw-to" ng-bind="kbValues[1]"></span></small></div>';
+            var labelTmpl =
+                '<div class="bottom5">' +
+                    '<small>' +
+                        '<span class="rw-from" ng-bind="kbValues[0]"></span>' +
+                        ' - ' +
+                        '<span class="rw-to" ng-bind="kbValues[1]"></span>' +
+                    '</small>' +
+                '</div>';
             $(elem).prepend($compile(labelTmpl)(scope));
-            var toFromTmpl = '<div class="clearfix"><small><span class="pull-left" ng-bind="(min) + \'kb\'"></span><span class="pull-right" ng-bind="(max) + \'kb\'"></span></small></div>';
+
+            var toFromTmpl =
+                '<div class="clearfix">' +
+                    '<small>' +
+                        '<span class="pull-left" ng-bind="min + \'KB\'"></span>' +
+                        '<span class="pull-right" ng-bind="max"></span>' +
+                    '</small>' +
+                '</div>';
             $(elem).append($compile(toFromTmpl)(scope));
         };
 
