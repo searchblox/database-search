@@ -183,7 +183,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
                 $('#facettagcloud a').tagcloud();
             });
         }
-    }
+    };
 
     // get top clicked function
     $scope.getTopClicked = function () {
@@ -197,7 +197,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
             if (topClickedResults != "nodocs" && topClickedResults != "queryerror" && topClickedResults != "")
                 $scope.topHtml = $sce.trustAsHtml(temphtml);
         });
-    }
+    };
 
     // adjust how many results are shown
     $scope.howmany = function () {

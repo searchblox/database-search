@@ -59,3 +59,26 @@ Object.resolve = function (path, obj) {
         return prev[curr];
     });
 };
+/**
+ * Source: http://stackoverflow.com/a/18650828/2706988
+ * @param {Number} bytes
+ * @returns {Number|String} return string if @size is true, otherwise number
+ */
+function bytesToSize(bytes, size) {
+    var result = 0,
+        size = size || false;
+
+    if(bytes == 0) return 0;
+
+    var k = 1024,
+        sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+        i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    result = +(bytes / Math.pow(k, i)).toPrecision(3);
+
+    if (size === true) {
+        result += ' ' + sizes[i];
+    }
+
+    return result;
+}
