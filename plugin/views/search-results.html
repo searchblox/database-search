@@ -25,7 +25,6 @@
 
     <div class="row" style="margin-top:20px;">
         <div class="col-sm-2 col-md-2 sidebar left-nav colorBg" ng-show="hasFacets()">
-
         	<span>
                 <br><br>
                 <div>
@@ -41,7 +40,7 @@
             </div>
 
 			<span>
-            <div ng-repeat="facet in parsedSearchResults.facets">
+            <div ng-repeat="facet in parsedSearchResults.facets" ng-if="parsedSearchResults.records.length">
                 <h5 style="font-weight: bold" ng-bind="facetMap[facet['name']]['display']"></h5>
                 <rw-slider
                         range="true"
@@ -68,7 +67,6 @@
             <div>
                 <div ng-bind-html="topHtml"></div>
             </div>
-
         </div>
 
 
