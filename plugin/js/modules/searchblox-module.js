@@ -25,6 +25,7 @@ angular.module('searchbloxModule', [
     'searchblox.service',
     'ui.bootstrap',
     'ngSanitize',
+    'ngRoute',
     'searchblox.contentItem',
     'searchblox.adsItem',
     'ui.bootstrap',
@@ -35,6 +36,25 @@ angular.module('searchbloxModule', [
     'rw.ui-slider',
     'rw.raw.visualize'
 ])
-.run(['$rootScope', function($rootScope) {
+.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+    $routeProvider
+    .when('/', {
+        title: 'SearchBlox Database Search',
+        templateUrl: 'views/main.html',
+        controller: 'searchbloxController'
+    })
+    .otherwise({
+        redirecTo: '/'
+    });
+
+    $locationProvider.html5Mode(false);
+}])
+.run(['$rootScope', '$route', function($rootScope, $route) {
     $rootScope.ddate = new Date().getFullYear();
+
+    $rootScope.$on('$routeChangeSuccess', function(oVal, nVal) {
+        if (oVal !== nVal) {
+            document.title = $route.current.title;
+        }
+    });
 }]);

@@ -45,9 +45,10 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
     $scope.tagHtml = "";
     $scope.topHtml = "";
     $scope.startedSearch = false;
+    $scope.initResolved = false;
     $scope.initAds = 1;
     $scope.maxAdsLimit = 2;
-    $scope.dataMap = new Object();
+    $scope.dataMap = {};
     $scope.inputClass = {};
     $scope.inputClass.name = "ngCustomInput col-sm-8 col-md-8 col-md-offset-2";
     $scope.gridColumns = [];
@@ -127,6 +128,8 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
                 $scope.dataMap['xsl'] = "json";
 
                 $scope.gridInit();
+                
+                $scope.initResolved = true;
             }
         });
     };
@@ -137,6 +140,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
         $scope.prevPage = 1;
         $scope.doSearch();
     };
+
     // Search function
     $scope.doSearch = function () {
         var urlParams = searchbloxService.getUrlParams(searchUrl, $scope.query,
@@ -242,7 +246,6 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
                     if ((facetName === 'size' && obj['slider'] === slider) || facetName === 'lastmodified') {
                         searchReplacment = true;
                         filter_index = i;
-                        console.log(i);
                     }
                 }
 

@@ -52,6 +52,11 @@
             "cellTemplate": "<div ng-bind-html=\"row.entity.htmlDescription\"></div>"
         },
         {
+            "name": "Name",
+            "field": "source.column1",
+            "cellTemplate": "<i ng-bind=\"COL_FIELD\"></i>"
+        },
+        {
             "name": "Last modified",
             "field": "lastmodified",
             "cellTemplate": "<i ng-bind=\"COL_FIELD\"></i>"

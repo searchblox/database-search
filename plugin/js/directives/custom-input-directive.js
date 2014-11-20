@@ -13,7 +13,7 @@
  *
  */
 angular.module('searchblox.custominput',[])
-    .directive('custominput', ["$interpolate", function ($interpolate) {
+    .directive('custominput', ["$interpolate", '$location', '$timeout', function ($interpolate, $location, $timeout) {
     function loadOptions(scope, attrs) {
         function getStr(name, defaultValue) {
             return attrs[name] ? $interpolate(attrs[name])(scope.$parent) : defaultValue;
@@ -32,7 +32,11 @@ angular.module('searchblox.custominput',[])
 
     return {
         restrict: 'A,E',
-        scope: { searchParam: '=ngModel', onsearch: '=', inputstyle:"=inputstyle"},
+        scope: {
+            searchParam: '=ngModel',
+            onsearch: '=',
+            inputstyle:"=inputstyle"
+        },
         replace: false,
         transclude: true,
         template: '<div class="{{inputstyle.name}}">' +
@@ -57,7 +61,8 @@ angular.module('searchblox.custominput',[])
             '<div ng-transclude></div>' +
             '</div>',
         controller: ["$scope", "$attrs", "$element", function ($scope, $attrs, $element) {
-
+            $scope.urlQuery = '';
+            
             loadOptions($scope, $attrs);
             // do search options
             $scope.partialMatch = function () {
@@ -76,7 +81,13 @@ angular.module('searchblox.custominput',[])
                 $scope.onsearch();
 
             }
-
+        
+            // If url contains ?query parameter
+            $scope.urlQuery = $location.search();
+            if (Object.keys($scope.urlQuery).length > 0 && $scope.urlQuery.query) {
+                $scope.searchParam = $scope.urlQuery.query;
+            }
+            
             $scope.fuzzyMatch = function () {
                 var newvals = $scope.searchParam.replace(/"/gi, '').replace(/\*/gi, '').replace(/\~/gi, '').split(' ');
                 var newstring = "";
@@ -93,6 +104,7 @@ angular.module('searchblox.custominput',[])
                 $scope.onsearch();
 
             }
+            
             $scope.exactMatch = function () {
                 var newvals = $scope.searchParam.replace(/"/gi, '').replace(/\*/gi, '').replace(/\~/gi, '').split(' ');
                 var newstring = "";
@@ -108,15 +120,15 @@ angular.module('searchblox.custominput',[])
                 $.trim(newstring, ' ');
                 $scope.searchParam = "\"" + newstring + "\"";
                 $scope.onsearch();
-
-
             }
+            
             $scope.matchAll = function () {
                 $scope.searchParam = $.trim($scope.searchParam.replace(/ OR /gi, ' '));
                 $scope.searchParam = ($scope.searchParam.replace(/ /gi, ' AND '));
                 $scope.doSearch();
 
             }
+            
             $scope.matchAny = function () {
                 $scope.searchParam = $.trim($scope.searchParam.replace(/ AND /gi, ' '));
                 $scope.searchParam = $scope.searchParam.replace(/ /gi, ' OR ');
@@ -146,7 +158,16 @@ angular.module('searchblox.custominput',[])
         link: function (scope, element) {
             var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
             var input = element.find('input');
-
+            
+            // If url contains ?query parameter search directly
+            if (scope.searchParam && scope.searchParam.length > 0) {
+                scope.$parent.$watch('initResolved', function(n) {
+                    if (n === true) {
+                        scope.onsearch();
+                    }
+                });
+            }
+            
             input.bind('keydown', function (e) {
                 var key;
 
@@ -157,16 +178,12 @@ angular.module('searchblox.custominput',[])
                 key = e.keyCode;
                 if (key === KEYS.enter && scope.options.addOnEnter) {
                     scope.onsearch();
-
-
                 }
             });
+            
             element.find('div').bind('click', function () {
                 input[0].focus();
             });
-
-
-
         }
     };
 }]);
