@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html >
 <head>
-    <title>SearchBlox Database Search</title>
+    <script>document.write('<base href="' + document.location + '">');</script>
+    <title ng-bind="siteTitle"></title>
     <meta charset="utf-8"/>
     <script src="lib/jquery-2.1.0.min.js"></script>
 
     <script type="text/javascript" src="lib/angular.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="lib/angular-route.min.js" charset="UTF-8"></script>
     <script type="text/javascript" src="lib/angular-resource.min.js" charset="UTF-8"></script>
     <script type="text/javascript" src="lib/angular-sanitize.min.js" charset="UTF-8"></script>
 
@@ -51,24 +53,14 @@
         <a href="http://www.searchblox.com"><img src="images/logo-searchblox.png"/></a>
     </div>
 
-    <div ng-controller="searchbloxController" ng-init="init()">
-        <form class="center-block" >
-            <custominput id="xyz" ng-model="query" onsearch="startSearch" inputstyle="inputClass">
-                <autocomplete source="loadItems" ng-show="showAutoSuggest"></autocomplete>
-            </custominput>
-        </form>
-        <div ng-include src="'views/search-results.html'"></div>
-    </div>
+    <div ng-view=""></div>
+
     <div id="footer" style="margin-top: 10px;" align="center">
-    <span
-            class="app-font">Copyright {{ddate}} SearchBlox Software, Inc.</span><span class="links">&nbsp;<a
-            href="http://www.searchblox.com" target="_blank">Contact Us</a></span></div>
+        <span class="app-font">Copyright {{ddate}} SearchBlox Software, Inc.</span>
+        <span class="links">&nbsp;<a href="http://www.searchblox.com" target="_blank">Contact Us</a></span>
+    </div>
 
 </div>
 
 </body>
 </html>
-
-
-
-
