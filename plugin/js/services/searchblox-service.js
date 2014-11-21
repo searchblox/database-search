@@ -213,7 +213,6 @@ angular.module('searchblox.service', [])
                         linkobj['pageNo'] = getParam('page', dataobj.links.link[item]["@url"]);
                         linkobj['url'] = dataobj.links.link[item]["@url"]
                         resultobj["pages"].push(linkobj);
-                        //resultobj["pages"].push(dataobj.links.link[item]);
                     }
 
                 }

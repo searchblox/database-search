@@ -28,7 +28,6 @@ angular.module('searchbloxModule', [
     'ngRoute',
     'searchblox.contentItem',
     'searchblox.adsItem',
-    'ui.bootstrap',
     'ui.grid',
     'ui.grid.exporter',
     'ui.grid.selection',
