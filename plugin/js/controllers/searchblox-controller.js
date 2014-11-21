@@ -324,7 +324,7 @@ angular.module('searchblox.controller', []).controller('searchbloxController', [
         $scope.page = selected_object['pageNo'];
         $scope.selectedItems.splice(index, 1);
         var filters = "";
-        for (var i = 0, l = $scope.selectedItems.length; i < l; i++) { // for(var obj in $scope.selectedItems){
+        for (var i = 0, l = $scope.selectedItems.length; i < l; i++) {
             var obj = $scope.selectedItems[i];
             if (obj['filterRangeFrom'] !== undefined && obj['filterRangeTo'] !== undefined) {
                 filters = filters + '&f.' + obj['facetName'] + '.filter=[' + obj['filterRangeFrom'] + 'TO' + obj['filterRangeTo'] + ']';
